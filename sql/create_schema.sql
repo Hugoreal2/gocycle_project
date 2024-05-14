@@ -38,6 +38,9 @@ CREATE TABLE bicicletas (
                             FOREIGN KEY (id_gps) REFERENCES gps(id) ON DELETE SET NULL
 );
 
+ALTER TABLE gps
+    ADD COLUMN bicicleta_id INTEGER UNIQUE,
+    ADD FOREIGN KEY (bicicleta_id) REFERENCES bicicletas(id) ON DELETE SET NULL;
 
 -- Tabela de clientes
 CREATE TABLE clientes (
