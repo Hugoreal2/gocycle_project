@@ -1,0 +1,16 @@
+package isel.sisinf.ui;
+
+
+/**
+ * Hello world!
+ *
+ */
+public class App 
+{
+    public static void main( String[] args )
+    {
+        isel.sisinf.App1.test();
+        System.out.println( "Hello World! From APP" );
+        System.out.println(isel.sisinf.App1.test() );
+    }
+}
