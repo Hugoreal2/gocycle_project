@@ -35,5 +35,10 @@
       <artifactId>model</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>jakarta.persistence</groupId>
+      <artifactId>jakarta.persistence-api</artifactId>
+      <version>3.0.0</version>
+    </dependency>
   </dependencies>
 </project>
