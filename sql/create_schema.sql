@@ -1,7 +1,7 @@
 -- Criação das tabelas
 
 -- Tabela de lojas
-CREATE TABLE lojas (
+CREATE TABLE IF NOT EXISTS lojas (
                        codigo SERIAL PRIMARY KEY,
                        gestor VARCHAR(100) NOT NULL,
                        morada VARCHAR(255) NOT NULL,
@@ -11,7 +11,7 @@ CREATE TABLE lojas (
 );
 
 -- Tabela de dispositivos GPS
-CREATE TABLE gps (
+CREATE TABLE IF NOT EXISTS gps (
                      id SERIAL PRIMARY KEY,
                      numero_serie VARCHAR(100) NOT NULL UNIQUE,
                      latitude DECIMAL(9,6) NOT NULL,
@@ -23,7 +23,7 @@ CREATE TABLE gps (
 
 
 -- Tabela de bicicletas
-CREATE TABLE bicicletas (
+CREATE TABLE IF NOT EXISTS bicicletas (
                             id SERIAL PRIMARY KEY,
                             tipo VARCHAR(10) CHECK (tipo IN ('classica', 'eletrica')) NOT NULL,
                             peso INTEGER NOT NULL,
@@ -39,11 +39,11 @@ CREATE TABLE bicicletas (
 );
 
 ALTER TABLE gps
-    ADD COLUMN bicicleta_id INTEGER UNIQUE,
+    ADD COLUMN IF NOT EXISTS bicicleta_id INTEGER UNIQUE,
     ADD FOREIGN KEY (bicicleta_id) REFERENCES bicicletas(id) ON DELETE SET NULL;
 
 -- Tabela de clientes
-CREATE TABLE clientes (
+CREATE TABLE IF NOT EXISTS clientes (
                           id SERIAL PRIMARY KEY,
                           nome VARCHAR(100) NOT NULL,
                           morada VARCHAR(255) NOT NULL,
@@ -55,7 +55,7 @@ CREATE TABLE clientes (
 );
 
 -- Tabela de reservas
-CREATE TABLE reservas (
+CREATE TABLE IF NOT EXISTS reservas (
                           numero SERIAL PRIMARY KEY,
                           loja_id INTEGER NOT NULL,
                           cliente_id INTEGER NOT NULL,
