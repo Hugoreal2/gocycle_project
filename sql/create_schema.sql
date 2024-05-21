@@ -1,3 +1,10 @@
+-- DROP ALL TABLES
+TRUNCATE TABLE reservas CASCADE;
+TRUNCATE TABLE clientes CASCADE;
+TRUNCATE TABLE bicicletas CASCADE;
+DROP TABLE IF EXISTS gps CASCADE;
+TRUNCATE TABLE lojas CASCADE;
+
 -- Criação das tabelas
 
 -- Tabela de lojas
@@ -38,9 +45,6 @@ CREATE TABLE IF NOT EXISTS bicicletas (
                             FOREIGN KEY (id_gps) REFERENCES gps(id) ON DELETE SET NULL
 );
 
-ALTER TABLE gps
-    ADD COLUMN IF NOT EXISTS bicicleta_id INTEGER UNIQUE,
-    ADD FOREIGN KEY (bicicleta_id) REFERENCES bicicletas(id) ON DELETE SET NULL;
 
 -- Tabela de clientes
 CREATE TABLE IF NOT EXISTS clientes (
@@ -79,17 +83,17 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Aplicar remoção lógica em lojas, clientes e bicicletas
-CREATE TRIGGER soft_delete_lojas
+CREATE OR REPLACE TRIGGER soft_delete_lojas
     BEFORE DELETE ON lojas
     FOR EACH ROW
 EXECUTE FUNCTION set_inactive();
 
-CREATE TRIGGER soft_delete_clientes
+CREATE OR REPLACE TRIGGER soft_delete_clientes
     BEFORE DELETE ON clientes
     FOR EACH ROW
 EXECUTE FUNCTION set_inactive();
 
-CREATE TRIGGER soft_delete_bicicletas
+CREATE OR REPLACE TRIGGER soft_delete_bicicletas
     BEFORE DELETE ON bicicletas
     FOR EACH ROW
 EXECUTE FUNCTION set_inactive();
@@ -111,7 +115,11 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER trigger_reserva_bicicletas
+CREATE OR REPLACE TRIGGER trigger_reserva_bicicletas
     BEFORE INSERT ON reservas
     FOR EACH ROW
 EXECUTE FUNCTION check_reserva_bicicletas();
+
+ALTER TABLE gps
+    ADD COLUMN IF NOT EXISTS bicicleta_id INTEGER UNIQUE,
+    ADD FOREIGN KEY (bicicleta_id) REFERENCES bicicletas(id) ON DELETE SET NULL;
