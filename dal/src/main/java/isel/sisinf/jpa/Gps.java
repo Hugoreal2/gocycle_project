@@ -78,4 +78,17 @@ public class Gps {
     public void setBicicleta(Bicicleta bicicleta) {
         this.bicicleta = bicicleta;
     }
+
+    @Override
+    public String toString() {
+        return "Gps{" +
+                "id=" + id +
+                ", numeroSerie='" + numeroSerie + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", percentagemBateria=" + percentagemBateria +
+                ", bicicleta=" + bicicleta +
+                '}';
+    }
+
 }

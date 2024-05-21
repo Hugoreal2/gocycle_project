@@ -127,4 +127,21 @@ public class Bicicleta {
     public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
     }
+
+    @Override
+    public String toString() {
+        return "Bicicleta{" +
+                "id=" + id +
+                ", tipo='" + tipo + '\'' +
+                ", peso=" + peso +
+                ", modelo='" + modelo + '\'' +
+                ", marca='" + marca + '\'' +
+                ", sistemaMudancas='" + sistemaMudancas + '\'' +
+                ", estado='" + estado + '\'' +
+                ", autonomia=" + autonomia +
+                ", velocidadeMaxima=" + velocidadeMaxima +
+                ", gps=" + gps.toString() +
+                ", ativo=" + ativo +
+                '}';
+    }
 }
