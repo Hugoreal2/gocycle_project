@@ -1,12 +1,6 @@
 package isel.sisinf.jpa;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Column;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.JoinColumn;
+import jakarta.persistence.*;
 
 @Entity
 public class Bicicleta {
@@ -26,7 +20,7 @@ public class Bicicleta {
     @Column(nullable = false)
     private String marca;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "sistema_mudancas")
     private String sistemaMudancas;
 
     @Column(nullable = false)
@@ -34,6 +28,7 @@ public class Bicicleta {
 
     private Integer autonomia;
 
+    @Column(name = "velocidade_maxima")
     private Integer velocidadeMaxima;
 
     @OneToOne

@@ -23,12 +23,15 @@ SOFTWARE.
 */
 package isel;
 
+import isel.sisinf.jpa.Bicicleta;
 import isel.sisinf.jpa.Cliente;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
+import repository.BicycleRepository;
 import repository.ClientRepository;
 
+import java.util.List;
 import java.util.Scanner;
 import java.util.HashMap;
 
@@ -155,6 +158,7 @@ class UI
     EntityManager em = emf.createEntityManager();
 
     ClientRepository clientRepository = new ClientRepository(em);
+    BicycleRepository bicycleRepository = new BicycleRepository(em);
 
     private void createCostumer() {
         try{
@@ -179,7 +183,7 @@ class UI
             Cliente cliente = new Cliente();
 
             System.out.println("Nome do cliente: ");
-            cliente.setNome(scanner.next());
+            cliente.setNome(scanner.nextLine());
 
             System.out.println("Morada do cliente: ");
             cliente.setMorada(scanner.nextLine());
@@ -204,8 +208,10 @@ class UI
   
     private void listExistingBikes()
     {
-        // TODO
-        System.out.println("listExistingBikes()");
+        List<Bicicleta> bikes = bicycleRepository.getBicycles();
+        for (Bicicleta b : bikes) {
+            System.out.println(b.toString());
+        }
     }
 
     private void checkBikeAvailability()
