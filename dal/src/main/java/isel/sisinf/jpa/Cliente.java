@@ -1,12 +1,9 @@
 package isel.sisinf.jpa;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Column;
+import jakarta.persistence.*;
 
 @Entity
+@Table(name = "Clientes")
 public class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +21,7 @@ public class Cliente {
     @Column(nullable = false)
     private String telefone;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "cc_passaporte")
     private String ccPassaporte;
 
     @Column(nullable = false)

@@ -23,8 +23,12 @@ SOFTWARE.
 */
 package isel;
 
-import java.sql.*;
-import java.util.ArrayList;
+import isel.sisinf.jpa.Cliente;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
+import repository.ClientRepository;
+
 import java.util.Scanner;
 import java.util.HashMap;
 
@@ -103,7 +107,6 @@ class UI
         }
         finally
         {
-            s.close();
         }
         return option;
 
@@ -148,11 +151,55 @@ class UI
     
     */
 
-    private static final int TAB_SIZE = 24;
+    EntityManagerFactory emf = Persistence.createEntityManagerFactory("common");
+    EntityManager em = emf.createEntityManager();
+
+    ClientRepository clientRepository = new ClientRepository(em);
 
     private void createCostumer() {
-        // TODO
+        try{
+
+            Cliente c = getClientFromConsole();
+
+            em.getTransaction().begin();
+
+            em.persist(c);
+
+            em.getTransaction().commit();
+        }
+        catch (Exception e){
+            System.out.println("Error: " + e.getCause().toString() + " - " + e.getMessage());
+        }
         System.out.println("createCostumer()");
+    }
+
+    private Cliente getClientFromConsole(){
+
+        try (Scanner scanner = new Scanner(System.in)) {
+            Cliente cliente = new Cliente();
+
+            System.out.println("Nome do cliente: ");
+            cliente.setNome(scanner.next());
+
+            System.out.println("Morada do cliente: ");
+            cliente.setMorada(scanner.nextLine());
+
+            System.out.println("Email do cliente: ");
+            cliente.setEmail(scanner.nextLine());
+
+            System.out.println("Telefone do cliente: ");
+            cliente.setTelefone(scanner.nextLine());
+
+            System.out.println("CC/Passaporte do cliente: ");
+            cliente.setCcPassaporte(scanner.nextLine());
+
+            System.out.println("Nacionalidade do cliente: ");
+            cliente.setNacionalidade(scanner.nextLine());
+
+            cliente.setAtivo(true);
+
+            return cliente;
+        }
     }
   
     private void listExistingBikes()
