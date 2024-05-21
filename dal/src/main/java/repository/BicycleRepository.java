@@ -22,14 +22,8 @@ public class BicycleRepository implements BicycleImpl {
 
     @Override
     public List<Bicicleta> getBicycles() {
-        String query = "SELECT b FROM Bicicletas b";
-
-        TypedQuery<Bicicleta> queryEm = entityManager.createQuery(query, Bicicleta.class);
-        List<Bicicleta> listOfBicycles = queryEm.getResultList();
-        return listOfBicycles;
-//        return entityManager.createQuery(query, Bicicleta.class)
-//
-//                .getResultList();
+        TypedQuery<Bicicleta> query = entityManager.createQuery("SELECT b FROM Bicicleta b", Bicicleta.class);
+        return query.getResultList();
     }
 
 

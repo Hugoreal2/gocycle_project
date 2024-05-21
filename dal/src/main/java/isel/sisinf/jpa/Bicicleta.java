@@ -3,6 +3,7 @@ package isel.sisinf.jpa;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "bicicletas")
 public class Bicicleta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -14,7 +14,7 @@ public class Gps {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, name = "numero_serie")
     private String numeroSerie;
 
     @Column(nullable = false, precision = 9, scale = 6)
@@ -23,7 +23,7 @@ public class Gps {
     @Column(nullable = false, precision = 9, scale = 6)
     private Double longitude;
 
-    @Column(nullable = false, precision = 5, scale = 2)
+    @Column(nullable = false, precision = 5, scale = 2,name = "percentagem_bateria")
     private Double percentagemBateria;
 
     @ManyToOne
