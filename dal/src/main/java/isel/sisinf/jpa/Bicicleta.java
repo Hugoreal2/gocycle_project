@@ -3,7 +3,22 @@ package isel.sisinf.jpa;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "bicicletas")
+@NamedQuery(name="Bicicleta.findByKey",
+        query="SELECT c FROM Bicicleta c WHERE c.id =:key")
+@NamedQuery(name="Bicicleta.findAll",
+        query="SELECT c FROM Bicicleta c")
+@NamedStoredProcedureQuery(
+        name = "Bicicleta.podeSerReservado",
+        procedureName = "pode_ser_reservado",
+        parameters = {
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "p_bicicleta_id", type = Integer.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "p_data_inicio", type = java.sql.Timestamp.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "p_data_fim", type = java.sql.Timestamp.class),
+                @StoredProcedureParameter(mode = ParameterMode.OUT, name = "result", type = Boolean.class)
+        }
+)
+
+
 public class Bicicleta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
