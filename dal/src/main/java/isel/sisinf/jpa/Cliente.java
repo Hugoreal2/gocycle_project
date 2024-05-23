@@ -3,7 +3,8 @@ package isel.sisinf.jpa;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "Clientes")
+@NamedQuery(name="Client.findByKey",
+        query="SELECT c FROM Cliente c WHERE c.id =:key")
 public class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

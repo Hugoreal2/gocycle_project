@@ -1,14 +1,10 @@
 package repository;
 
 import isel.sisinf.jpa.Bicicleta;
-import isel.sisinf.jpa.Cliente;
 
+import java.util.Collection;
 import java.util.List;
 
-public interface BicycleImpl {
-
-    Bicicleta getBicycleById(int id);
+public interface BicycleImpl extends IRepository<Bicicleta, Collection<Bicicleta>, Long>, IBicycleDataMapper {
     List<Bicicleta> getBicycles();
-    void saveBicycle(Bicicleta bicycle);
-    void deleteBicycle(int id);
 }

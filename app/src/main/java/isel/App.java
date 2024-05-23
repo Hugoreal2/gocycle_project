@@ -28,8 +28,7 @@ import isel.sisinf.jpa.Cliente;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
-import repository.BicycleRepository;
-import repository.ClientRepository;
+import repository.JPAContext;
 
 import java.util.List;
 import java.util.Scanner;
@@ -154,22 +153,12 @@ class UI
     
     */
 
-    EntityManagerFactory emf = Persistence.createEntityManagerFactory("common");
-    EntityManager em = emf.createEntityManager();
-
-    ClientRepository clientRepository = new ClientRepository(em);
-    BicycleRepository bicycleRepository = new BicycleRepository(em);
-
     private void createCostumer() {
-        try{
+        try (JPAContext ctx = new JPAContext()){
 
             Cliente c = getClientFromConsole();
 
-            em.getTransaction().begin();
-
-            em.persist(c);
-
-            em.getTransaction().commit();
+            ctx.getClientesRepo().create(c);
         }
         catch (Exception e){
             System.out.println("Error: " + e.getCause().toString() + " - " + e.getMessage());
@@ -208,10 +197,16 @@ class UI
   
     private void listExistingBikes()
     {
-        List<Bicicleta> bikes = bicycleRepository.getBicycles();
-        for (Bicicleta b : bikes) {
-            System.out.println(b.toString());
+        try (JPAContext ctx = new JPAContext()){
+            List<Bicicleta> bikes = ctx.getBiciclesRepo().getBicycles();
+            for (Bicicleta b : bikes) {
+                System.out.println(b.toString());
+            }
         }
+        catch (Exception e){
+            System.out.println("Error: " + e.getCause().toString() + " - " + e.getMessage());
+        }
+
     }
 
     private void checkBikeAvailability()

@@ -1,14 +1,14 @@
 -- DROP ALL TABLES
-DROP TABLE IF EXISTS reservas CASCADE;
-DROP TABLE IF EXISTS clientes CASCADE;
-DROP TABLE IF EXISTS bicicletas CASCADE;
+DROP TABLE IF EXISTS reserva CASCADE;
+DROP TABLE IF EXISTS cliente CASCADE;
+DROP TABLE IF EXISTS bicicleta CASCADE;
 DROP TABLE IF EXISTS gps CASCADE;
-DROP TABLE IF EXISTS lojas CASCADE;
+DROP TABLE IF EXISTS loja CASCADE;
 
 -- Criação das tabelas
 
 -- Tabela de lojas
-CREATE TABLE IF NOT EXISTS lojas (
+CREATE TABLE IF NOT EXISTS loja (
                        codigo SERIAL PRIMARY KEY,
                        gestor VARCHAR(100) NOT NULL,
                        morada VARCHAR(255) NOT NULL,
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS gps (
 
 
 -- Tabela de bicicletas
-CREATE TABLE IF NOT EXISTS bicicletas (
+CREATE TABLE IF NOT EXISTS bicicleta (
                             id SERIAL PRIMARY KEY,
                             tipo VARCHAR(10) CHECK (tipo IN ('classica', 'eletrica')) NOT NULL,
                             peso INTEGER NOT NULL,
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS bicicletas (
 
 
 -- Tabela de clientes
-CREATE TABLE IF NOT EXISTS clientes (
+CREATE TABLE IF NOT EXISTS cliente (
                           id SERIAL PRIMARY KEY,
                           nome VARCHAR(100) NOT NULL,
                           morada VARCHAR(255) NOT NULL,
@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS clientes (
 );
 
 -- Tabela de reservas
-CREATE TABLE IF NOT EXISTS reservas (
+CREATE TABLE IF NOT EXISTS reserva (
                           numero SERIAL PRIMARY KEY,
                           loja_id INTEGER NOT NULL,
                           cliente_id INTEGER NOT NULL,
@@ -67,9 +67,9 @@ CREATE TABLE IF NOT EXISTS reservas (
                           data_inicio TIMESTAMP NOT NULL,
                           data_fim TIMESTAMP NOT NULL,
                           valor DECIMAL(10,2) NOT NULL,
-                          FOREIGN KEY (loja_id) REFERENCES lojas(codigo),
-                          FOREIGN KEY (cliente_id) REFERENCES clientes(id),
-                          FOREIGN KEY (bicicleta_id) REFERENCES bicicletas(id),
+                          FOREIGN KEY (loja_id) REFERENCES loja(codigo),
+                          FOREIGN KEY (cliente_id) REFERENCES cliente(id),
+                          FOREIGN KEY (bicicleta_id) REFERENCES bicicleta(id),
                           UNIQUE (loja_id, numero),
                           CONSTRAINT reserva_unica_cliente_data UNIQUE (cliente_id, data_inicio)
 );
@@ -84,17 +84,17 @@ $$ LANGUAGE plpgsql;
 
 -- Aplicar remoção lógica em lojas, clientes e bicicletas
 CREATE OR REPLACE TRIGGER soft_delete_lojas
-    BEFORE DELETE ON lojas
+    BEFORE DELETE ON loja
     FOR EACH ROW
 EXECUTE FUNCTION set_inactive();
 
 CREATE OR REPLACE TRIGGER soft_delete_clientes
-    BEFORE DELETE ON clientes
+    BEFORE DELETE ON cliente
     FOR EACH ROW
 EXECUTE FUNCTION set_inactive();
 
 CREATE OR REPLACE TRIGGER soft_delete_bicicletas
-    BEFORE DELETE ON bicicletas
+    BEFORE DELETE ON bicicleta
     FOR EACH ROW
 EXECUTE FUNCTION set_inactive();
 
@@ -104,8 +104,8 @@ DECLARE
     total_disponiveis INTEGER;
     total_reservadas INTEGER;
 BEGIN
-    SELECT COUNT(*) INTO total_disponiveis FROM bicicletas WHERE estado = 'livre' AND ativo = TRUE;
-    SELECT COUNT(*) INTO total_reservadas FROM bicicletas WHERE estado = 'em reserva' AND ativo = TRUE;
+    SELECT COUNT(*) INTO total_disponiveis FROM bicicleta WHERE estado = 'livre' AND ativo = TRUE;
+    SELECT COUNT(*) INTO total_reservadas FROM bicicleta WHERE estado = 'em reserva' AND ativo = TRUE;
 
     IF (total_reservadas + 1) > (total_disponiveis * 0.1) THEN
         RAISE EXCEPTION 'Não é possível fazer a reserva, limite de bicicletas reservadas excedido';
@@ -116,10 +116,10 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE TRIGGER trigger_reserva_bicicletas
-    BEFORE INSERT ON reservas
+    BEFORE INSERT ON reserva
     FOR EACH ROW
 EXECUTE FUNCTION check_reserva_bicicletas();
 
 ALTER TABLE gps
     ADD COLUMN IF NOT EXISTS bicicleta_id INTEGER UNIQUE,
-    ADD FOREIGN KEY (bicicleta_id) REFERENCES bicicletas(id) ON DELETE SET NULL;
+    ADD FOREIGN KEY (bicicleta_id) REFERENCES bicicleta(id) ON DELETE SET NULL;

@@ -2,12 +2,8 @@ package repository;
 
 import isel.sisinf.jpa.Cliente;
 
-import java.util.List;
+import java.util.Collection;
 
-public interface ClienteImpl {
+public interface ClienteImpl extends IRepository<Cliente, Collection<Cliente>, Long>, IClientDataMapper {
 
-    Cliente getClienteById(int id);
-    List<Cliente> getClientes();
-    void saveCliente(Cliente cliente);
-    void deleteCliente(int id);
 }

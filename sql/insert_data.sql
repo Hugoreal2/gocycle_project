@@ -1,4 +1,4 @@
-INSERT INTO lojas (gestor, morada, telefone, email)
+INSERT INTO loja (gestor, morada, telefone, email)
 VALUES
     ('João Silva', 'Rua das Flores, 123', '123456789', 'joao.silva@exemplo.com'),
     ('Maria Oliveira', 'Avenida dos Aliados, 456', '987654321', 'maria.oliveira@exemplo.com');
@@ -34,7 +34,7 @@ VALUES
     ('GPS789016', 38.907192, -77.036871, 0.35)
     ;
 
-INSERT INTO bicicletas (tipo, peso, modelo, marca, sistema_mudancas, estado, autonomia, velocidade_maxima, id_gps)
+INSERT INTO bicicleta (tipo, peso, modelo, marca, sistema_mudancas, estado, autonomia, velocidade_maxima, id_gps)
 VALUES
     ('classica', 15, 'Modelo A', 'Marca X', 'manual', 'livre', NULL, NULL, 1),
     ('eletrica', 20, 'Modelo B', 'Marca Y', 'automatico', 'livre', 100, 25, 2),
@@ -65,18 +65,18 @@ VALUES
 
 ;
 
-INSERT INTO clientes (nome, morada, email, telefone, cc_passaporte, nacionalidade)
+INSERT INTO cliente (nome, morada, email, telefone, cc_passaporte, nacionalidade)
 VALUES
     ('Ana Costa', 'Rua das Laranjeiras, 789', 'ana.costa@exemplo.com', '123123123', 'CC12345678', 'Portuguesa'),
     ('Pedro Gomes', 'Praça do Comércio, 101', 'pedro.gomes@exemplo.com', '321321321', 'CC87654321', 'Portuguesa');
 
 
-INSERT INTO reservas (loja_id, cliente_id, bicicleta_id, data_inicio, data_fim, valor)
+INSERT INTO reserva (loja_id, cliente_id, bicicleta_id, data_inicio, data_fim, valor)
 VALUES
     (1, 1, 1, '2024-06-01 10:00:00', '2024-06-01 18:00:00', 15.00);
 
 -- Insert dummy data into clientes
-INSERT INTO clientes (nome, morada, email, telefone, cc_passaporte, nacionalidade)
+INSERT INTO cliente (nome, morada, email, telefone, cc_passaporte, nacionalidade)
 VALUES
     ('Ana Costa', 'Rua das Laranjeiras, 789', 'ana.costa@exemplo.com', '123123123', 'CC12345678', 'Portuguesa'),
     ('Pedro Gomes', 'Praça do Comércio, 101', 'pedro.gomes@exemplo.com', '321321321', 'CC87654321', 'Portuguesa');
