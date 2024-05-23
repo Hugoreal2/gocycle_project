@@ -123,3 +123,35 @@ EXECUTE FUNCTION check_reserva_bicicletas();
 ALTER TABLE gps
     ADD COLUMN IF NOT EXISTS bicicleta_id INTEGER UNIQUE,
     ADD FOREIGN KEY (bicicleta_id) REFERENCES bicicleta(id) ON DELETE SET NULL;
+
+
+
+CREATE OR REPLACE FUNCTION pode_ser_reservado(
+    p_bicicleta_id INTEGER,
+    p_data_inicio TIMESTAMP,
+    p_data_fim TIMESTAMP
+)
+    RETURNS BOOLEAN AS $$
+DECLARE
+    v_count INTEGER;
+BEGIN
+    SELECT COUNT(*)
+    INTO v_count
+    FROM reserva
+    WHERE bicicleta_id = p_bicicleta_id
+      AND (
+        (p_data_inicio BETWEEN data_inicio AND data_fim) OR
+        (p_data_fim BETWEEN data_inicio AND data_fim) OR
+        (data_inicio BETWEEN p_data_inicio AND p_data_fim) OR
+        (data_fim BETWEEN p_data_inicio AND p_data_fim)
+        );
+
+
+    IF v_count > 0 THEN
+        RETURN FALSE;
+    ELSE
+        RETURN TRUE;
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+

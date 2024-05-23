@@ -30,6 +30,8 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import repository.JPAContext;
 
+
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Scanner;
 import java.util.HashMap;
@@ -211,8 +213,29 @@ class UI
 
     private void checkBikeAvailability()
     {
-        // TODO
-        System.out.println("checkBikeAvailability()");
+        try (JPAContext ctx = new JPAContext()){
+
+            try (Scanner scanner = new Scanner(System.in)) {
+
+                System.out.println("Id da bicicleta a validar: ");
+                Integer id = scanner.nextInt();
+
+                System.out.println("Data de inicio da reserva (dd-mm-yyyy): ");
+                Timestamp dataInicio = Timestamp.valueOf(scanner.nextLine());
+
+                System.out.println("Data de fim da reserva (dd-mm-yyyy): ");
+                Timestamp dataFim = Timestamp.valueOf(scanner.nextLine());
+
+                Boolean result = ctx.getBiciclesRepo().podeSerReservado(id, dataInicio, dataFim);
+
+                System.out.println("Pode ser reservado: " + result);
+            }
+
+        }
+        catch (Exception e){
+            System.out.println("Error: " + e.getCause().toString() + " - " + e.getMessage());
+        }
+
 
     }
 
