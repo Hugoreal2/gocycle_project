@@ -103,6 +103,7 @@ class UI
             
             int result = s.nextInt();
             option = Option.values()[result];
+
         }
         catch(RuntimeException ex)
         {
@@ -110,6 +111,7 @@ class UI
         }
         finally
         {
+
         }
         return option;
 
@@ -179,7 +181,7 @@ class UI
 
     private Cliente getClientFromConsole(){
 
-        try (Scanner scanner = new Scanner(System.in)) {
+            Scanner scanner = new Scanner(System.in);
             Cliente cliente = new Cliente();
 
             System.out.println("Nome do cliente: ");
@@ -203,7 +205,7 @@ class UI
             cliente.setAtivo(true);
 
             return cliente;
-        }
+
     }
   
     private void listExistingBikes()
