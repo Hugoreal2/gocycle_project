@@ -26,7 +26,9 @@ package repository;
 // a) Why IContext needs to implement AutoCloseable
 public interface IContext extends AutoCloseable {
 
-	 enum IsolationLevel {READ_UNCOMMITTED, READ_COMMITTED, REPEATABLE_READ, SERIALIZABLE };
+	ReservaImpl getReservasRepo();
+
+	enum IsolationLevel {READ_UNCOMMITTED, READ_COMMITTED, REPEATABLE_READ, SERIALIZABLE };
 	 void beginTransaction();
 	 void beginTransaction(IsolationLevel isolationLevel);
 	 void commit();

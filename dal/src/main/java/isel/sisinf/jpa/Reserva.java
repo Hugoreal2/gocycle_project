@@ -1,13 +1,6 @@
 package isel.sisinf.jpa;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Column;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.JoinColumn;
-
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -28,69 +21,25 @@ public class Reserva {
     @JoinColumn(name = "bicicleta_id", nullable = false)
     private Bicicleta bicicleta;
 
-    @Column(nullable = false)
+    @Column(name = "data_inicio", nullable = false)
     private LocalDateTime dataInicio;
 
-    @Column(nullable = false)
+    @Column(name = "data_fim", nullable = false)
     private LocalDateTime dataFim;
 
-    @Column(nullable= false)
+    @Column(nullable = false)
     private Double valor;
 
-    // Getters and Setters
-    public Long getNumero() {
-        return numero;
-    }
-
-    public void setNumero(Long numero) {
-        this.numero = numero;
-    }
-
-    public Loja getLoja() {
-        return loja;
-    }
-
-    public void setLoja(Loja loja) {
-        this.loja = loja;
-    }
-
-    public Cliente getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
-    }
-
-    public Bicicleta getBicicleta() {
-        return bicicleta;
-    }
-
-    public void setBicicleta(Bicicleta bicicleta) {
-        this.bicicleta = bicicleta;
-    }
-
-    public LocalDateTime getDataInicio() {
-        return dataInicio;
-    }
-
-    public void setDataInicio(LocalDateTime dataInicio) {
-        this.dataInicio = dataInicio;
-    }
-
-    public LocalDateTime getDataFim() {
-        return dataFim;
-    }
-
-    public void setDataFim(LocalDateTime dataFim) {
-        this.dataFim = dataFim;
-    }
-
-    public Double getValor() {
-        return valor;
-    }
-
-    public void setValor(Double valor) {
-        this.valor = valor;
+    @Override
+    public String toString() {
+        return "Reserva{" +
+                "numero=" + numero +
+                ", loja=" + loja.toString() +
+                ", cliente=" + cliente.getNome() +
+                ", bicicleta=" + bicicleta.getModelo() +
+                ", dataInicio=" + dataInicio +
+                ", dataFim=" + dataFim +
+                ", valor=" + valor +
+                '}';
     }
 }

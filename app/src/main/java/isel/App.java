@@ -25,6 +25,7 @@ package isel;
 
 import isel.sisinf.jpa.Bicicleta;
 import isel.sisinf.jpa.Cliente;
+import isel.sisinf.jpa.Reserva;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -234,11 +235,17 @@ class UI {
     }
 
 
-
     private void obtainBookings() {
-        // TODO
-        System.out.println("obtainBookings()");
+        try (JPAContext ctx = new JPAContext()) {
+            List<Reserva> reservas = ctx.getReservasRepo().findAll();
+            for (Reserva r : reservas) {
+                System.out.println(r.toString());
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getCause().toString() + " - " + e.getMessage());
+        }
     }
+
 
     private void makeBooking()
     {
