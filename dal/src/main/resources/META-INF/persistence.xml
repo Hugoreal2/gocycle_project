@@ -7,10 +7,20 @@
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
 
         <properties>
+
             <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
             <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/postgres"/>
             <property name="jakarta.persistence.jdbc.user" value="postgres"/>
-            <property name="jakarta.persistence.jdbc.password" value="postgres"/>
+            <property name="jakarta.persistence.jdbc.password" value="psqlsupwd1"/>
+
+
+            <property name="eclipselink.logging.level" value="INFO"/>
+            <property name="eclipselink.target-database" value="org.eclipse.persistence.platform.database.PostgreSQLPlatform" />
+            <property name="eclipselink.jdbc.connection_pool.default.initial" value="2" />
+            <property name="eclipselink.jdbc.connection_pool.default.min" value="2" />
+            <property name="eclipselink.jdbc.connection_pool.default.max" value="5" />
+
+
 
         </properties>
     </persistence-unit>

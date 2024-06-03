@@ -215,13 +215,15 @@ public class JPAContext implements IContext {
         @Override
         public Boolean podeSerReservado(Integer bicicleta_id, Timestamp data_inicio, Timestamp data_fim) {
             StoredProcedureQuery query = _em.createNamedStoredProcedureQuery("Bicicleta.podeSerReservado");
-            query.setParameter("p_bicicleta_id", bicicleta_id);
-            query.setParameter("p_data_inicio", data_inicio);
-            query.setParameter("p_data_fim", data_fim);
+
+            // Set parameters by position
+            query.setParameter(1, bicicleta_id);
+            query.setParameter(2, data_inicio);
+            query.setParameter(3, data_fim);
 
             query.execute();
 
-            return (Boolean) query.getOutputParameterValue("result");
+            return (Boolean) query.getOutputParameterValue(4);
         }
     }
 
