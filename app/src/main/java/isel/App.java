@@ -53,7 +53,6 @@ class UI {
         cancelBooking,
         about
     }
-
     private static UI __instance = null;
 
     private HashMap<Option, DbWorker> __dbMethods;
@@ -234,6 +233,8 @@ class UI {
         } catch (Exception e) {
             System.out.println("Error: " + e.getCause().toString() + " - " + e.getMessage());
         }
+
+
     }
 
     private void obtainBookings() {
