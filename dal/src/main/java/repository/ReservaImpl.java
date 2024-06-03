@@ -1,6 +1,8 @@
 package repository;
 
 import isel.sisinf.jpa.Reserva;
+
+import java.sql.Timestamp;
 import java.util.List;
 
 public interface ReservaImpl {
@@ -9,4 +11,7 @@ public interface ReservaImpl {
     Reserva create(Reserva entity);
     Reserva update(Reserva entity);
     void delete(Reserva entity);
+
+    void createReservaWithStoredProcedure(int lojaId, int clienteId, int bicicletaId, Timestamp dataInicio, Timestamp dataFim, double valor);
+
 }

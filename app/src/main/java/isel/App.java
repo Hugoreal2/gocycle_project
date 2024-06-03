@@ -33,6 +33,8 @@ import repository.JPAContext;
 
 
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Scanner;
 import java.util.HashMap;
@@ -57,9 +59,13 @@ class UI {
 
     private static UI __instance = null;
 
+    private JPAContext context;
+
+
     private HashMap<Option, DbWorker> __dbMethods;
 
     private UI() {
+        context = new JPAContext();
         // DO NOT CHANGE ANYTHING!
         __dbMethods = new HashMap<Option, DbWorker>();
         __dbMethods.put(Option.createCostumer, () -> UI.this.createCostumer());
@@ -247,12 +253,49 @@ class UI {
     }
 
 
-    private void makeBooking()
-    {
-        // TODO
-        System.out.println("makeBooking()");
-        
+    private void makeBooking() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter loja_id: ");
+        int lojaId = scanner.nextInt();
+
+        System.out.print("Enter cliente_id: ");
+        int clienteId = scanner.nextInt();
+
+        System.out.print("Enter bicicleta_id: ");
+        int bicicletaId = scanner.nextInt();
+
+        scanner.nextLine(); // Consumir nova linha deixada por nextInt()
+
+        System.out.print("Enter data_inicio (yyyy-mm-dd hh:mm:ss): ");
+        String dataInicioStr = scanner.nextLine();
+
+        System.out.print("Enter data_fim (yyyy-mm-dd hh:mm:ss): ");
+        String dataFimStr = scanner.nextLine();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Timestamp dataInicio = null;
+        Timestamp dataFim = null;
+
+        try {
+            dataInicio = new Timestamp(dateFormat.parse(dataInicioStr).getTime());
+            dataFim = new Timestamp(dateFormat.parse(dataFimStr).getTime());
+        } catch (ParseException e) {
+            System.out.println("Error parsing date: " + e.getMessage());
+            return;
+        }
+
+        System.out.print("Enter valor: ");
+        double valor = scanner.nextDouble();
+
+        try (JPAContext context = new JPAContext()) {
+            context.getReservasRepo().createReservaWithStoredProcedure(lojaId, clienteId, bicicletaId, dataInicio, dataFim, valor);
+            System.out.println("Booking made successfully.");
+        } catch (Exception e) {
+            System.out.println("Error making booking: " + e.getMessage());
+        }
     }
+
 
     private void cancelBooking()
     {

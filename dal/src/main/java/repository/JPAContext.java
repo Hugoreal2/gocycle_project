@@ -245,6 +245,35 @@ public class JPAContext implements IContext {
             return entity;
         }
 
+        public void createReservaWithStoredProcedure(int lojaId, int clienteId, int bicicletaId, Timestamp dataInicio, Timestamp dataFim, double valor) {
+            EntityTransaction transaction = _em.getTransaction();
+            try {
+                transaction.begin();
+                StoredProcedureQuery query = _em.createStoredProcedureQuery("adicionar_reserva")
+                        .registerStoredProcedureParameter(1, Integer.class, jakarta.persistence.ParameterMode.IN)
+                        .registerStoredProcedureParameter(2, Integer.class, jakarta.persistence.ParameterMode.IN)
+                        .registerStoredProcedureParameter(3, Integer.class, jakarta.persistence.ParameterMode.IN)
+                        .registerStoredProcedureParameter(4, Timestamp.class, jakarta.persistence.ParameterMode.IN)
+                        .registerStoredProcedureParameter(5, Timestamp.class, jakarta.persistence.ParameterMode.IN)
+                        .registerStoredProcedureParameter(6, Double.class, jakarta.persistence.ParameterMode.IN)
+                        .setParameter(1, lojaId)
+                        .setParameter(2, clienteId)
+                        .setParameter(3, bicicletaId)
+                        .setParameter(4, dataInicio)
+                        .setParameter(5, dataFim)
+                        .setParameter(6, valor);
+
+                query.execute();
+                transaction.commit();
+            } catch (Exception e) {
+                if (transaction.isActive()) {
+                    transaction.rollback();
+                }
+                throw new RuntimeException("Error creating reservation with stored procedure", e);
+            }
+        }
+
+
         @Override
         public Reserva update(Reserva entity) {
             _em.getTransaction().begin();

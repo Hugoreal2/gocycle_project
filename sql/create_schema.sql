@@ -5,6 +5,7 @@ DROP TABLE IF EXISTS bicicleta CASCADE;
 DROP TABLE IF EXISTS gps CASCADE;
 DROP TABLE IF EXISTS loja CASCADE;
 
+
 -- Criação das tabelas
 
 -- Tabela de lojas
@@ -154,4 +155,23 @@ BEGIN
     END IF;
 END;
 $$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION adicionar_reserva(
+    loja_id INT,
+    cliente_id INT,
+    bicicleta_id INT,
+    data_inicio TIMESTAMP,
+    data_fim TIMESTAMP,
+    valor DOUBLE PRECISION
+) RETURNS VOID AS $$
+BEGIN
+    INSERT INTO reserva (loja_id, cliente_id, bicicleta_id, data_inicio, data_fim, valor)
+    VALUES (loja_id, cliente_id, bicicleta_id, data_inicio, data_fim, valor);
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+
 
