@@ -2,13 +2,22 @@ package isel.sisinf.jpa;
 
 import jakarta.persistence.*;
 
-
-
 @Entity
 @NamedQuery(name="Bicicleta.findByKey",
         query="SELECT c FROM Bicicleta c WHERE c.id =:key")
 @NamedQuery(name="Bicicleta.findAll",
         query="SELECT c FROM Bicicleta c")
+@NamedStoredProcedureQuery(
+        name = "Bicicleta.podeSerReservado",
+        procedureName = "pode_ser_reservado",
+        parameters = {
+                @StoredProcedureParameter(mode = ParameterMode.IN, type = Integer.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, type = java.sql.Timestamp.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, type = java.sql.Timestamp.class),
+                @StoredProcedureParameter(mode = ParameterMode.OUT, type = Boolean.class)
+        }
+)
+
 
 public class Bicicleta {
     @Id
@@ -134,8 +143,6 @@ public class Bicicleta {
         this.ativo = ativo;
     }
 
-
-
     @Override
     public String toString() {
         return "Bicicleta{" +
@@ -148,7 +155,7 @@ public class Bicicleta {
                 ", estado='" + estado + '\'' +
                 ", autonomia=" + autonomia +
                 ", velocidadeMaxima=" + velocidadeMaxima +
-                ", gps=" + (gps != null ? gps.toString() : "null") +
+                ", gps=" + gps.toString() +
                 ", ativo=" + ativo +
                 '}';
     }

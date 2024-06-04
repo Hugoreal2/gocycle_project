@@ -73,7 +73,7 @@ VALUES
 
 INSERT INTO reserva (loja_id, cliente_id, bicicleta_id, data_inicio, data_fim, valor)
 VALUES
-    (1, 1, 1, '2024-06-01 10:00:00', '2024-06-01 18:00:00', 15.00);
+    (1, 1, 1, '2024-06-01 10:00:00', '2024-06-03 18:00:00', 15.00);
 
 -- Insert dummy data into clientes
 INSERT INTO cliente (nome, morada, email, telefone, cc_passaporte, nacionalidade)
