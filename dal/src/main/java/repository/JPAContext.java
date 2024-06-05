@@ -1,5 +1,6 @@
 package repository;
 
+
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
@@ -10,6 +11,7 @@ import isel.sisinf.jpa.Reserva;
 import jakarta.persistence.*;
 import org.eclipse.persistence.sessions.DatabaseLogin;
 import org.eclipse.persistence.sessions.Session;
+
 
 public class JPAContext implements IContext {
     private EntityManagerFactory _emf;
@@ -47,12 +49,17 @@ public class JPAContext implements IContext {
     }
 
     protected Object helperDeleteteImpl(Object entity) {
-        beginTransaction();
+        beginTransaction(); //Each write can have multiple inserts on the DB. See the relations.
         _em.remove(entity);
         commit();
         return entity;
     }
     /// END HELPER
+
+    @Override
+    public ReservaImpl getReservasRepo() {
+        return _reservaRepository;
+    }
 
     @Override
     public void beginTransaction() {
@@ -84,9 +91,10 @@ public class JPAContext implements IContext {
 
     @Override
     public void commit() {
+
         --_txcount;
         if (_txcount == 0 && _tx != null) {
-            _em.flush();
+            _em.flush(); //To assure all changes in memory go into the database
             _tx.commit();
             _tx = null;
         }
@@ -97,14 +105,17 @@ public class JPAContext implements IContext {
         _em.flush();
     }
 
+
     @Override
     public void clear() {
         _em.clear();
+
     }
 
     @Override
     public void persist(Object entity) {
         _em.persist(entity);
+
     }
 
     @Override
@@ -117,26 +128,25 @@ public class JPAContext implements IContext {
         return _clientRepository;
     }
 
-    @Override
-    public ReservaImpl getReservasRepo() {
-        return _reservaRepository;
-    }
-
     public JPAContext() {
         this("common");
     }
 
     public JPAContext(String persistentCtx) {
         super();
+
         this._emf = Persistence.createEntityManagerFactory(persistentCtx);
         this._em = _emf.createEntityManager();
+        //this._countryRepository = new CountryRepository();
         this._bicycleRepository = new BicycleRepository();
         this._clientRepository = new ClientRepository();
         this._reservaRepository = new ReservaRepository();
     }
 
+
     @Override
     public void close() throws Exception {
+
         if (_tx != null)
             _tx.rollback();
         _em.close();
@@ -149,27 +159,29 @@ public class JPAContext implements IContext {
 
         @Override
         public Cliente findByKey(Long key) {
-            return _em.find(Cliente.class, key);
+            return _em.createNamedQuery("Client.findByKey",Cliente.class)
+                    .setParameter("key", key)
+                    .getSingleResult();
         }
 
         @Override
         public Collection<Cliente> find(String jpql, Object... params) {
-            return helperQueryImpl(jpql, params);
+            return helperQueryImpl( jpql, params);
         }
 
         @Override
         public Cliente create(Cliente entity) {
-            return (Cliente) helperCreateImpl(entity);
+            return (Cliente)helperCreateImpl(entity);
         }
 
         @Override
         public Cliente update(Cliente entity) {
-            return (Cliente) helperUpdateImpl(entity);
+            return (Cliente)helperUpdateImpl(entity);
         }
 
         @Override
         public Cliente delete(Cliente entity) {
-            return (Cliente) helperDeleteteImpl(entity);
+            return (Cliente)helperDeleteteImpl(entity);
         }
     }
 
@@ -177,134 +189,106 @@ public class JPAContext implements IContext {
 
         @Override
         public Bicicleta findByKey(Long key) {
-            return _em.find(Bicicleta.class, key);
+            return _em.createNamedQuery("Bicicleta.findByKey",Bicicleta.class)
+                    .setParameter("key", key)
+                    .getSingleResult();
         }
 
         @Override
         public Collection<Bicicleta> find(String jpql, Object... params) {
-            return helperQueryImpl(jpql, params);
+            return helperQueryImpl( jpql, params);
         }
 
         @Override
         public Bicicleta create(Bicicleta entity) {
-            return (Bicicleta) helperCreateImpl(entity);
+            return (Bicicleta)helperCreateImpl(entity);
         }
 
         @Override
         public Bicicleta update(Bicicleta entity) {
-            return (Bicicleta) helperUpdateImpl(entity);
+            return (Bicicleta)helperUpdateImpl(entity);
         }
 
         @Override
         public Bicicleta delete(Bicicleta entity) {
-            return (Bicicleta) helperDeleteteImpl(entity);
+            return (Bicicleta)helperDeleteteImpl(entity);
         }
 
         @Override
         public List<Bicicleta> getBicycles() {
-            return _em.createQuery("SELECT b FROM Bicicleta b", Bicicleta.class).getResultList();
+            return _em.createNamedQuery("Bicicleta.findAll",Bicicleta.class)
+                    .getResultList();
         }
 
         @Override
         public Boolean podeSerReservado(Integer bicicleta_id, Timestamp data_inicio, Timestamp data_fim) {
-            try {
-                StoredProcedureQuery query = _em.createStoredProcedureQuery("pode_ser_reservado")
-                        .registerStoredProcedureParameter(1, Integer.class, jakarta.persistence.ParameterMode.IN)
-                        .registerStoredProcedureParameter(2, Timestamp.class, jakarta.persistence.ParameterMode.IN)
-                        .registerStoredProcedureParameter(3, Timestamp.class, jakarta.persistence.ParameterMode.IN)
-                        .registerStoredProcedureParameter(4, Boolean.class, jakarta.persistence.ParameterMode.OUT)
-                        .setParameter(1, bicicleta_id)
-                        .setParameter(2, data_inicio)
-                        .setParameter(3, data_fim);
+            StoredProcedureQuery query = _em.createNamedStoredProcedureQuery("Bicicleta.podeSerReservado");
 
-                query.execute();
-                Boolean result = (Boolean) query.getOutputParameterValue(4);
-                return result;
-            } finally {
-                // Do nothing
-            }
+            // Set parameters by position
+            query.setParameter(1, bicicleta_id);
+            query.setParameter(2, data_inicio);
+            query.setParameter(3, data_fim);
+
+            query.execute();
+
+            return (Boolean) query.getOutputParameterValue(4);
         }
     }
+
+
     public class ReservaRepository implements ReservaImpl {
 
         @Override
         public Reserva findByKey(Long key) {
-            return _em.find(Reserva.class, key);
+            return _em.createNamedQuery("Reserva.findByKey",Reserva.class)
+                    .setParameter("key", key)
+                    .getSingleResult();
         }
 
         @Override
         public List<Reserva> findAll() {
-            return _em.createQuery("SELECT r FROM Reserva r", Reserva.class).getResultList();
+            return _em.createNamedQuery("Reserva.findAll",Reserva.class)
+                    .getResultList();
         }
 
         @Override
         public Reserva create(Reserva entity) {
-            _em.getTransaction().begin();
-            _em.persist(entity);
-            _em.getTransaction().commit();
-            return entity;
+            return (Reserva)helperCreateImpl(entity);
         }
-
-        public void createReservaWithStoredProcedure(int lojaId, int clienteId, int bicicletaId, Timestamp dataInicio, Timestamp dataFim, double valor) {
-            EntityTransaction transaction = _em.getTransaction();
-            try {
-                transaction.begin();
-                StoredProcedureQuery query = _em.createStoredProcedureQuery("adicionar_reserva")
-                        .registerStoredProcedureParameter(1, Integer.class, jakarta.persistence.ParameterMode.IN)
-                        .registerStoredProcedureParameter(2, Integer.class, jakarta.persistence.ParameterMode.IN)
-                        .registerStoredProcedureParameter(3, Integer.class, jakarta.persistence.ParameterMode.IN)
-                        .registerStoredProcedureParameter(4, Timestamp.class, jakarta.persistence.ParameterMode.IN)
-                        .registerStoredProcedureParameter(5, Timestamp.class, jakarta.persistence.ParameterMode.IN)
-                        .registerStoredProcedureParameter(6, Double.class, jakarta.persistence.ParameterMode.IN)
-                        .setParameter(1, lojaId)
-                        .setParameter(2, clienteId)
-                        .setParameter(3, bicicletaId)
-                        .setParameter(4, dataInicio)
-                        .setParameter(5, dataFim)
-                        .setParameter(6, valor);
-
-                query.execute();
-                transaction.commit();
-            } catch (Exception e) {
-                if (transaction.isActive()) {
-                    transaction.rollback();
-                }
-                throw new RuntimeException("Error creating reservation with stored procedure", e);
-            }
-        }
-
-        public void cancelarReservaWithStoredProcedure(int reservaId) {
-            EntityTransaction transaction = _em.getTransaction();
-            try {
-                transaction.begin();
-                StoredProcedureQuery query = _em.createStoredProcedureQuery("cancelar_reserva")
-                        .registerStoredProcedureParameter(1, Integer.class, jakarta.persistence.ParameterMode.IN)
-                        .setParameter(1, reservaId);
-
-                query.execute();
-                transaction.commit();
-            } catch (Exception e) {
-                if (transaction.isActive()) {
-                    transaction.rollback();
-                }
-                throw new RuntimeException("Error cancelling reservation with stored procedure", e);
-            }
-        }
-
 
         @Override
         public Reserva update(Reserva entity) {
-            _em.getTransaction().begin();
-            _em.merge(entity);
-            _em.getTransaction().commit();
-            return entity;
+            return null;
         }
 
         @Override
         public void delete(Reserva entity) {
-            _em.getTransaction().begin();
-            _em.remove(entity);
-            _em.getTransaction().commit();
+
+        }
+
+        @Override
+        public void createReservaWithStoredProcedure(int lojaId, int clienteId, int bicicletaId, Timestamp dataInicio, Timestamp dataFim, double valor) {
+            StoredProcedureQuery query = _em.createNamedStoredProcedureQuery("Reserva.createReserva");
+
+            // Set parameters by position
+            query.setParameter(1, lojaId);
+            query.setParameter(2, clienteId);
+            query.setParameter(3, bicicletaId);
+            query.setParameter(4, dataInicio);
+            query.setParameter(5, dataFim);
+            query.setParameter(6, valor);
+
+            query.execute();
+        }
+
+        @Override
+        public void cancelarReservaWithStoredProcedure(int reservaId) {
+            StoredProcedureQuery query = _em.createNamedStoredProcedureQuery("Reserva.cancelarReserva");
+
+            // Set parameters by position
+            query.setParameter(1, reservaId);
+
+            query.execute();
         }
     }
 

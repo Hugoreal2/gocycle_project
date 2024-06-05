@@ -1,9 +1,34 @@
 package isel.sisinf.jpa;
 
 import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 
 @Entity
+@NamedStoredProcedureQuery(
+        name = "Reserva.cancelarReserva",
+        procedureName = "cancelar_reserva",
+        parameters = {
+                @StoredProcedureParameter(mode = ParameterMode.IN, type = Long.class)
+        }
+)
+
+@NamedStoredProcedureQuery(
+        name = "Reserva.createReserva",
+        procedureName = "adicionar_reserva",
+        parameters = {
+                @StoredProcedureParameter(mode = ParameterMode.IN, type = Integer.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, type = Integer.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, type = Integer.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, type = java.sql.Timestamp.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, type = java.sql.Timestamp.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, type = Double.class)
+})
+
+@NamedQuery(name="Reserva.findByKey",
+        query="SELECT r FROM Reserva r WHERE r.numero =:key")
+@NamedQuery(name="Reserva.findAll",
+        query="SELECT r FROM Reserva r")
 public class Reserva {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
