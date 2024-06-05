@@ -55,6 +55,9 @@ public class Reserva {
     @Column(nullable = false)
     private Double valor;
 
+    @Version
+    private Long version;
+
     @Override
     public String toString() {
         return "Reserva{" +
