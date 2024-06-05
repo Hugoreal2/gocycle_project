@@ -181,22 +181,22 @@ class UI {
         Scanner scanner = new Scanner(System.in);
         Cliente cliente = new Cliente();
 
-        System.out.println("Nome do cliente: ");
+        System.out.println("Client name: ");
         cliente.setNome(scanner.nextLine());
 
-        System.out.println("Morada do cliente: ");
+        System.out.println("Client address: ");
         cliente.setMorada(scanner.nextLine());
 
-        System.out.println("Email do cliente: ");
+        System.out.println("Client email: ");
         cliente.setEmail(scanner.nextLine());
 
-        System.out.println("Telefone do cliente: ");
+        System.out.println("Client phone number: ");
         cliente.setTelefone(scanner.nextLine());
 
-        System.out.println("CC/Passaporte do cliente: ");
+        System.out.println("Client CC/Passport: ");
         cliente.setCcPassaporte(scanner.nextLine());
 
-        System.out.println("Nacionalidade do cliente: ");
+        System.out.println("Client nationality: ");
         cliente.setNacionalidade(scanner.nextLine());
 
         cliente.setAtivo(true);
@@ -226,15 +226,15 @@ class UI {
 
             scanner.nextLine();
 
-            System.out.print("Enter start date (yyyy-mm-dd hh:mm:ss): ");
+            System.out.print("Enter start date and time (yyyy-mm-dd hh:mm:ss): ");
             Timestamp dataInicio = Timestamp.valueOf(scanner.nextLine());
 
-            System.out.print("Enter end date (yyyy-mm-dd hh:mm:ss): ");
+            System.out.print("Enter end date and time (yyyy-mm-dd hh:mm:ss): ");
             Timestamp dataFim = Timestamp.valueOf(scanner.nextLine());
 
             Boolean result =  ctx.getBiciclesRepo().podeSerReservado(id, dataInicio, dataFim);
 
-            System.out.println("Pode ser reservado: " + result);
+            System.out.println("It can be booked: " + result);
         } catch (Exception e) {
             System.out.println("Error: " + e.getCause().toString() + " - " + e.getMessage());
         }
@@ -256,21 +256,21 @@ class UI {
     private void makeBooking() {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.print("Enter loja_id: ");
+        System.out.print("Enter store id: ");
         int lojaId = scanner.nextInt();
 
-        System.out.print("Enter cliente_id: ");
+        System.out.print("Enter client id: ");
         int clienteId = scanner.nextInt();
 
-        System.out.print("Enter bicicleta_id: ");
+        System.out.print("Enter bike id: ");
         int bicicletaId = scanner.nextInt();
 
         scanner.nextLine(); // Consumir nova linha deixada por nextInt()
 
-        System.out.print("Enter data_inicio (yyyy-mm-dd hh:mm:ss): ");
+        System.out.print("Enter starting date and time (yyyy-mm-dd hh:mm:ss): ");
         String dataInicioStr = scanner.nextLine();
 
-        System.out.print("Enter data_fim (yyyy-mm-dd hh:mm:ss): ");
+        System.out.print("Enter ending date and time (yyyy-mm-dd hh:mm:ss): ");
         String dataFimStr = scanner.nextLine();
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -285,7 +285,7 @@ class UI {
             return;
         }
 
-        System.out.print("Enter valor: ");
+        System.out.print("Enter monetary value (in euros): ");
         double valor = scanner.nextDouble();
 
         try (JPAContext context = new JPAContext()) {
@@ -297,11 +297,18 @@ class UI {
     }
 
 
-    private void cancelBooking()
-    {
-        // TODO
-        System.out.println("cancelBooking");
-        
+    private void cancelBooking() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter reservation number: ");
+        int reservaId = scanner.nextInt();
+
+        try (JPAContext context = new JPAContext()) {
+            context.getReservasRepo().cancelarReservaWithStoredProcedure(reservaId);
+            System.out.println("Booking cancelled successfully.");
+        } catch (Exception e) {
+            System.out.println("Error cancelling booking: " + e.getMessage());
+        }
     }
     private void about()
     {

@@ -14,4 +14,5 @@ public interface ReservaImpl {
 
     void createReservaWithStoredProcedure(int lojaId, int clienteId, int bicicletaId, Timestamp dataInicio, Timestamp dataFim, double valor);
 
+    void cancelarReservaWithStoredProcedure(int reservaId);
 }

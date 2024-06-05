@@ -273,6 +273,24 @@ public class JPAContext implements IContext {
             }
         }
 
+        public void cancelarReservaWithStoredProcedure(int reservaId) {
+            EntityTransaction transaction = _em.getTransaction();
+            try {
+                transaction.begin();
+                StoredProcedureQuery query = _em.createStoredProcedureQuery("cancelar_reserva")
+                        .registerStoredProcedureParameter(1, Integer.class, jakarta.persistence.ParameterMode.IN)
+                        .setParameter(1, reservaId);
+
+                query.execute();
+                transaction.commit();
+            } catch (Exception e) {
+                if (transaction.isActive()) {
+                    transaction.rollback();
+                }
+                throw new RuntimeException("Error cancelling reservation with stored procedure", e);
+            }
+        }
+
 
         @Override
         public Reserva update(Reserva entity) {

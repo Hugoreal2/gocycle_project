@@ -171,6 +171,11 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION cancelar_reserva(reserva_id INT) RETURNS VOID AS $$
+BEGIN
+    DELETE FROM reserva WHERE numero = reserva_id;
+END;
+$$ LANGUAGE plpgsql;
 
 
 
