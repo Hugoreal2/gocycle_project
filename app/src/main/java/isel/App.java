@@ -312,10 +312,12 @@ class UI {
     }
     private void about()
     {
-        // TODO: Add your Group ID & member names
         System.out.println("DAL version:"+isel.sisinf.jpa.Dal.version());
         System.out.println("Core version:"+isel.sisinf.model.Core.version());
-        
+        System.out.println("Group ID: G51T41N");
+        System.out.println("48281 - Adolfo Morgado");
+        System.out.println("48982 - Hugo Araújo");
+        System.out.println("46042 - Maria do Rosário Machado");
     }
 }
 
