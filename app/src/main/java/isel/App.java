@@ -167,9 +167,13 @@ class UI {
     private void createCostumer() {
         try (JPAContext ctx = new JPAContext()) {
 
+            ctx.beginTransaction();
+
             Cliente c = getClientFromConsole();
 
             ctx.getClientesRepo().create(c);
+
+            ctx.commit();
         } catch (Exception e) {
             System.out.println("Error: " + e.getCause().toString() + " - " + e.getMessage());
         }
@@ -289,7 +293,11 @@ class UI {
         double valor = scanner.nextDouble();
 
         try (JPAContext context = new JPAContext()) {
+            context.beginTransaction();
+
             context.getReservasRepo().createReservaWithStoredProcedure(lojaId, clienteId, bicicletaId, dataInicio, dataFim, valor);
+
+            context.commit();
             System.out.println("Booking made successfully.");
         } catch (Exception e) {
             System.out.println("Error making booking: " + e.getMessage());
