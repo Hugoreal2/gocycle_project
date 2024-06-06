@@ -30,6 +30,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import repository.JPAContext;
+import repository.ReservaImpl;
 
 
 import java.sql.Timestamp;
@@ -312,7 +313,21 @@ class UI {
         int reservaId = scanner.nextInt();
 
         try (JPAContext context = new JPAContext()) {
-            context.getReservasRepo().cancelarReservaWithStoredProcedure(reservaId);
+            context.beginTransaction();
+
+            ReservaImpl repo = context.getReservasRepo();
+
+            Reserva reserva = repo.findByKey((long)reservaId);
+
+            if (reserva == null) {
+                System.out.println("Booking not found.");
+                return;
+            }
+
+            repo.delete(reserva);
+
+            context.commit();
+//            context.getReservasRepo().cancelarReservaWithStoredProcedure(reservaId);
             System.out.println("Booking cancelled successfully.");
         } catch (Exception e) {
             System.out.println("Error cancelling booking: " + e.getMessage());

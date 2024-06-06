@@ -263,7 +263,7 @@ public class JPAContext implements IContext {
 
         @Override
         public void delete(Reserva entity) {
-
+            helperDeleteteImpl(entity);
         }
 
         @Override

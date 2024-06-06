@@ -68,6 +68,8 @@ CREATE TABLE IF NOT EXISTS reserva (
                           data_inicio TIMESTAMP NOT NULL,
                           data_fim TIMESTAMP NOT NULL,
                           valor DECIMAL(10,2) NOT NULL,
+    -- added version for JPA optimistic locking
+                          version INTEGER DEFAULT 0,
                           FOREIGN KEY (loja_id) REFERENCES loja(codigo),
                           FOREIGN KEY (cliente_id) REFERENCES cliente(id),
                           FOREIGN KEY (bicicleta_id) REFERENCES bicicleta(id),

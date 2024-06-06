@@ -68,6 +68,7 @@ public class Reserva {
                 ", dataInicio=" + dataInicio +
                 ", dataFim=" + dataFim +
                 ", valor=" + valor +
+                ", version=" + version +
                 '}';
     }
 }
