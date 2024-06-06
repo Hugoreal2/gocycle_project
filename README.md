@@ -38,3 +38,11 @@ For more information about how to use maven see the [documentation](https://mave
 ## License
 
 This project is licensed under the [MIT License](https://opensource.org/license/mit).
+
+
+TO RUN THE CODE
+
+```bash
+mvn clean install
+mvn exec:java -pl app
+```

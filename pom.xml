@@ -34,7 +34,7 @@
           <artifactId>exec-maven-plugin</artifactId>
           <version>1.2.1</version>
           <configuration>
-            <mainClass>isel.sisinf.ui.App</mainClass>
+            <mainClass>isel.App</mainClass>
           </configuration>
           <executions>
             <execution>
